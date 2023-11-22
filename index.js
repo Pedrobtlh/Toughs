@@ -12,6 +12,13 @@ const conn = require("./db/conn");
 const Tought = require("./models/Tought");
 const User = require("./models/User");
 
+//Import Routes
+const toughtsRoutes = require("./routes/toughtsRouter");
+const AuthRoutes = require("./routes/authRoutes");
+
+//Import Controller
+const ToughtsController = require("./controllers/ToughtController");
+
 //template engine
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
@@ -59,6 +66,12 @@ app.use((req, res, next) => {
 
   next();
 });
+
+//Routes
+app.use("/toughts", toughtsRoutes);
+app.use("/", AuthRoutes);
+
+app.get("/", ToughtsController.showToughts);
 
 conn
   //.sync({ force: true })
