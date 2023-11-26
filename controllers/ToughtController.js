@@ -23,7 +23,11 @@ module.exports = class ToughtsController {
 
     const toughts = user.Toughts.map((result) => result.dataValues);
 
-    console.log(toughts);
+    let emptyToughts = false;
+
+    if (toughts.length === 0) {
+      emptyToughts = true;
+    }
 
     res.render("toughts/dashboard", { toughts });
   }
@@ -49,5 +53,44 @@ module.exports = class ToughtsController {
     } catch (error) {
       console.log(error);
     }
+  }
+
+  static removeTought(req, res) {
+    const id = req.body.id;
+
+    Tought.destroy({ where: { id: id }, raw: true })
+      .then(() => {
+        req.flash("message", "Pensamento removido com sucesso!");
+        req.session.save(() => {
+          res.redirect("/toughts/dashboard");
+        });
+      })
+      .catch((err) => console.log());
+  }
+
+  static async updateTought(req, res) {
+    const id = req.params.id;
+
+    const tought = await Tought.findOne({ where: { id: id } });
+
+    res.render("toughts/edit", { tought });
+  }
+
+  static async updateToughtSave(req, res) {
+    const id = req.body.id;
+
+    const tought = {
+      title: req.body.title,
+      description: req.body.description,
+    };
+
+    await Tought.update(tought, { where: { id: id } })
+      .then(() => {
+        req.flash("message", "Pensamento atualizado com sucesso!");
+        req.session.save(() => {
+          res.redirect("/toughts/dashboard");
+        });
+      })
+      .catch((err) => console.log());
   }
 };
