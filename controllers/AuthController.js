@@ -37,6 +37,7 @@ module.exports = class AuthController {
 
     req.session.save(() => {
       res.redirect("/");
+      return;
     });
   }
   static register(req, res) {

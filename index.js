@@ -22,6 +22,7 @@ const ToughtsController = require("./controllers/ToughtController");
 //template engine
 app.engine("handlebars", exphbs.engine());
 app.set("view engine", "handlebars");
+exphbs.create({ allowProtoMethodsByDefault: true });
 
 //receber reposta do body
 app.use(
